@@ -1,4 +1,5 @@
 import './App.css';
+import Frame from './components/Frame'
 
 
 function App() {
@@ -6,7 +7,7 @@ function App() {
   return (
    
       <div className="App">
-            <h1>Calculator</h1>
+            <Frame/>
       </div>
   );
 }
