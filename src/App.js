@@ -14,6 +14,12 @@ const buttonValues = [
   [0, ".", "="],
 ];
 
+const toLocaleString = (num) =>
+  String(num).replace(/(?<!\..*)(\d)(?=(?:\d{3})+(?:\.|$))/g, "$1 ");
+
+const removeSpaces = (num) => num.toString().replace(/\s/g, "");
+
+
 
 function App() {
   let [calc, setCalc] = useState ({
@@ -23,21 +29,20 @@ function App() {
   });
 
   //numClickHandler - function is triggered if the numbers btwn (0-9) are clicked
-  const numClickHandler = (e) => {
+   const numClickHandler = (e) => {
     e.preventDefault();
     const value = e.target.innerHTML;
-    
-    if (calc.num.length < 10) //numbers entered upto 10 integers long
-    {
+
+    if (removeSpaces(calc.num).length < 16) {
       setCalc({
         ...calc,
         num:
           calc.num === 0 && value === "0"
             ? "0"
-            : calc.num % 1 === 0
-            ? Number(calc.num + value)
-            : calc.num + value,
-        res: !calc.sign ? 0 : calc.val,
+            : removeSpaces(calc.num) % 1 === 0
+            ? toLocaleString(Number(removeSpaces(calc.num + value)))
+            : toLocaleString(calc.num + value),
+        val: !calc.sign ? 0 : calc.val,
       });
     }
   };
@@ -61,7 +66,7 @@ const signClickHandler = (e) => {
   setCalc({
     ...calc,
     sign: value,
-    val: !calc.res && calc.num ? calc.num : calc.val,
+    val: !calc.val && calc.num ? calc.num : calc.val,
     num: 0,
   });
 };
@@ -96,7 +101,7 @@ const invertClickHandler = () => {
   setCalc({
     ...calc,
     num: calc.num ? calc.num * -1 : 0,
-    res: calc.res ? calc.res * -1 : 0,
+    res: calc.val ? calc.val * -1 : 0,
     sign: "",
   });
 };
@@ -105,12 +110,12 @@ const invertClickHandler = () => {
 //percentClickHandler - function checks if there’s any entered value (num) or calculated value (val) and then calculates the percentage using the built-in Math.pow function, which returns the base to the exponent power:
 const percentClickHandler = () => {
   let num = calc.num ? parseFloat(calc.num) : 0;
-  let res = calc.res ? parseFloat(calc.res) : 0;
+  let val = calc.res ? parseFloat(calc.val) : 0;
 
   setCalc({
     ...calc,
     num: (num /= Math.pow(100, 1)),
-    res: (res /= Math.pow(100, 1)),
+    val: (val /= Math.pow(100, 1)),
     sign: "",
   });
 };
@@ -121,7 +126,7 @@ const resetClickHandler = () => {
     ...calc,
     sign: "",
     num: 0,
-    res: 0,
+    val: 0,
   });
 };
 
