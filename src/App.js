@@ -115,6 +115,16 @@ const percentClickHandler = () => {
   });
 };
 
+//reset click handler - defaults all the initial values of calc
+const resetClickHandler = () => {
+  setCalc({
+    ...calc,
+    sign: "",
+    num: 0,
+    res: 0,
+  });
+};
+
 
 
   return (
