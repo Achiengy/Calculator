@@ -67,6 +67,31 @@ const signClickHandler = (e) => {
 };
 
 
+//equalsClickHandler - calculates the result when the equals button is clicked
+const equalsClickHandler = () => {
+  if (calc.sign && calc.num) {
+    const math = (a, b, sign) =>
+      sign === "+"
+        ? a + b
+        : sign === "-"
+        ? a - b
+        : sign === "X"
+        ? a * b
+        : a / b;
+
+    setCalc({
+      ...calc,
+      res:
+        calc.num === "0" && calc.sign === "/"
+          ? "Can't divide with 0"
+          : math(Number(calc.val), Number(calc.num), calc.sign),
+      sign: "",
+      num: 0,
+    });
+  }
+};
+
+
   return (
    
       <div className="App">
