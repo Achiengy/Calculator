@@ -6,11 +6,11 @@ import ButtonBox from './components/ButtonBox';
 import Screen from './components/Calc-screen';
 
 
-const buttonValues = [
-  ["AC","-/+","%","/"],
-  [7, 8, 9,"*"],
-  [4, 5, 6,"-"],
-  [1, 2, 3,"+"],
+ const btnValues = [
+  ["AC", "-/+", "%", "/"],
+  [7, 8, 9, "*"],
+  [4, 5, 6, "-"],
+  [1, 2, 3, "+"],
   [0, ".", "="],
 ];
 
@@ -19,17 +19,14 @@ const toLocaleString = (num) =>
 
 const removeSpaces = (num) => num.toString().replace(/\s/g, "");
 
-
-
-function App() {
-  let [calc, setCalc] = useState ({
-    sign: "",  //selected sign
-    num: 0,   //entered value
-    val: 0,  //calculated value
+const App = () => {
+  let [calc, setCalc] = useState({
+    sign: "",
+    num: 0,
+    res: 0,
   });
 
-  //numClickHandler - function is triggered if the numbers btwn (0-9) are clicked
-   const numClickHandler = (e) => {
+  const numClickHandler = (e) => {
     e.preventDefault();
     const value = e.target.innerHTML;
 
@@ -42,111 +39,104 @@ function App() {
             : removeSpaces(calc.num) % 1 === 0
             ? toLocaleString(Number(removeSpaces(calc.num + value)))
             : toLocaleString(calc.num + value),
-        val: !calc.sign ? 0 : calc.val,
+        res: !calc.sign ? 0 : calc.res,
       });
     }
   };
 
-  //commaClickHandler - function gets prompted if the decimal point is clicked
   const commaClickHandler = (e) => {
-  e.preventDefault();
-  const value = e.target.innerHTML;
-
-  setCalc({
-    ...calc,
-    num: !calc.num.toString().includes(".") ? calc.num + value : calc.num,
-  });
-};
-
-//signClickHandler - gets prompted when a user clicks any sign buttons on the calculator
-const signClickHandler = (e) => {
-  e.preventDefault();
-  const value = e.target.innerHTML;
-
-  setCalc({
-    ...calc,
-    sign: value,
-    val: !calc.val && calc.num ? calc.num : calc.val,
-    num: 0,
-  });
-};
-
-
-//equalsClickHandler - calculates the result when the equals button is clicked
-const equalsClickHandler = () => {
-  if (calc.sign && calc.num) {
-    const math = (a, b, sign) =>
-      sign === "+"
-        ? a + b
-        : sign === "-"
-        ? a - b
-        : sign === "X"
-        ? a * b
-        : a / b;
+    e.preventDefault();
+    const value = e.target.innerHTML;
 
     setCalc({
       ...calc,
-      res:
-        calc.num === "0" && calc.sign === "/"
-          ? "Can't divide with 0"
-          : math(Number(calc.val), Number(calc.num), calc.sign),
-      sign: "",
+      num: !calc.num.toString().includes(".") ? calc.num + value : calc.num,
+    });
+  };
+
+  const signClickHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.innerHTML;
+
+    setCalc({
+      ...calc,
+      sign: value,
+      res: !calc.res && calc.num ? calc.num : calc.res,
       num: 0,
     });
-  }
-};
+  };
 
-//invertClickHandler - checks if there's any entered value or calculated value and then inverts them by multiplying with -1
-const invertClickHandler = () => {
-  setCalc({
-    ...calc,
-    num: calc.num ? calc.num * -1 : 0,
-    res: calc.val ? calc.val * -1 : 0,
-    sign: "",
-  });
-};
+  const equalsClickHandler = () => {
+    if (calc.sign && calc.num) {
+      const math = (a, b, sign) =>
+        sign === "+"
+          ? a + b
+          : sign === "-"
+          ? a - b
+          : sign === "*"
+          ? a * b
+          : a / b;
 
+      setCalc({
+        ...calc,
+        res:
+          calc.num === "0" && calc.sign === "/"
+            ? "Can't divide with 0"
+            : toLocaleString(
+                math(
+                  Number(removeSpaces(calc.res)),
+                  Number(removeSpaces(calc.num)),
+                  calc.sign
+                )
+              ),
+        sign: "",
+        num: 0,
+      });
+    }
+  };
 
-//percentClickHandler - function checks if there’s any entered value (num) or calculated value (val) and then calculates the percentage using the built-in Math.pow function, which returns the base to the exponent power:
-const percentClickHandler = () => {
-  let num = calc.num ? parseFloat(calc.num) : 0;
-  let val = calc.res ? parseFloat(calc.val) : 0;
+  const invertClickHandler = () => {
+    setCalc({
+      ...calc,
+      num: calc.num ? toLocaleString(removeSpaces(calc.num) * -1) : 0,
+      res: calc.res ? toLocaleString(removeSpaces(calc.res) * -1) : 0,
+      sign: "",
+    });
+  };
 
-  setCalc({
-    ...calc,
-    num: (num /= Math.pow(100, 1)),
-    val: (val /= Math.pow(100, 1)),
-    sign: "",
-  });
-};
+  const percentClickHandler = () => {
+    let num = calc.num ? parseFloat(removeSpaces(calc.num)) : 0;
+    let res = calc.res ? parseFloat(removeSpaces(calc.res)) : 0;
 
-//reset click handler - defaults all the initial values of calc
-const resetClickHandler = () => {
-  setCalc({
-    ...calc,
-    sign: "",
-    num: 0,
-    val: 0,
-  });
-};
+    setCalc({
+      ...calc,
+      num: (num /= Math.pow(100, 1)),
+      res: (res /= Math.pow(100, 1)),
+      sign: "",
+    });
+  };
 
-
+  const resetClickHandler = () => {
+    setCalc({
+      ...calc,
+      sign: "",
+      num: 0,
+      res: 0,
+    });
+  };
 
   return (
-   
-      <div className="App">
-            <Frame>
-               <Screen value={calc.num ? calc.num : calc.val} />
-               <ButtonBox>
-        {
-          buttonValues.flat().map((btn, i) => {
-            return (
-              <Button
-                key={i}
-                className={btn === "=" ? "equals" : ""}
-                value={btn}
-                onClick={
-                  btn === "AC"
+    <Frame>
+      <Screen value={calc.num ? calc.num : calc.res} />
+      <ButtonBox>
+        {btnValues.flat().map((btn, i) => {
+          return (
+            <Button
+              key={i}
+              className={btn === "=" ? "equals" : ""}
+              value={btn}
+              onClick={
+                btn === "AC"
                   ? resetClickHandler
                   : btn === "-/+"
                   ? invertClickHandler
@@ -159,16 +149,13 @@ const resetClickHandler = () => {
                   : btn === "."
                   ? commaClickHandler
                   : numClickHandler
-                }
-              />
-            );
-          })
-        }
+              }
+            />
+          );
+        })}
       </ButtonBox>
-            </Frame>
-      </div>
+    </Frame>
   );
 };
 
 export default App;
-
