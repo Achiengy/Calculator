@@ -26,7 +26,7 @@ function App() {
    
       <div className="App">
             <Frame>
-              <Screen value="0"/>
+               <Screen value={calc.num ? calc.num : calc.val} />
                <ButtonBox>
         {
           buttonValues.flat().map((btn, i) => {
@@ -35,9 +35,21 @@ function App() {
                 key={i}
                 className={btn === "=" ? "equals" : ""}
                 value={btn}
-                onClick={() => {
-                  console.log(`${btn} clicked!`);
-                }}
+                onClick={
+                  btn === "AC"
+                  ? resetClickHandler
+                  : btn === "-/+"
+                  ? invertClickHandler
+                  : btn === "%"
+                  ? percentClickHandler
+                  : btn === "="
+                  ? equalsClickHandler
+                  : btn === "/" || btn === "*" || btn === "-" || btn === "+"
+                  ? signClickHandler
+                  : btn === "."
+                  ? commaClickHandler
+                  : numClickHandler
+                }
               />
             );
           })
