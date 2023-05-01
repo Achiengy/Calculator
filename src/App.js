@@ -22,6 +22,26 @@ function App() {
     val: 0,  //calculated value
   });
 
+  //numClickHandler
+  const numClickHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.innerHTML;
+    
+    if (calc.num.length < 10) //numbers entered upto 10 integers long
+    {
+      setCalc({
+        ...calc,
+        num:
+          calc.num === 0 && value === "0"
+            ? "0"
+            : calc.num % 1 === 0
+            ? Number(calc.num + value)
+            : calc.num + value,
+        res: !calc.sign ? 0 : calc.val,
+      });
+    }
+  };
+
   return (
    
       <div className="App">
