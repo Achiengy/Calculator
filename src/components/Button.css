@@ -1,6 +1,6 @@
 button {
     border: none;
-    background-color: rgb(80, 60, 209);
+    background-color: PINK;
     font-size: 24px;
     color: rgb(255, 255, 255);
     font-weight: bold;
@@ -10,7 +10,7 @@ button {
 }
 
 button:hover {
-    background-color: rgb(61, 43, 184);
+    background-color: #BEBDB8;
 }
 
 .equals {
