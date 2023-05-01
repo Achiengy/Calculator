@@ -53,6 +53,20 @@ function App() {
   });
 };
 
+//signClickHandler - gets prompted when a user clicks any sign buttons on the calculator
+const signClickHandler = (e) => {
+  e.preventDefault();
+  const value = e.target.innerHTML;
+
+  setCalc({
+    ...calc,
+    sign: value,
+    val: !calc.res && calc.num ? calc.num : calc.val,
+    num: 0,
+  });
+};
+
+
   return (
    
       <div className="App">
