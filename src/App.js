@@ -1,3 +1,4 @@
+import React, { useState } from "react"
 import './App.css';
 import Button from './components/Button';
 import Frame from './components/Frame';
@@ -13,7 +14,13 @@ const buttonValues = [
   [0, ".", "="],
 ];
 
+
 function App() {
+  let [calc, setCalc] = useState ({
+    sign: "",  //selected sign
+    num: 0,   //entered value
+    val: 0,  //calculated value
+  });
 
   return (
    
