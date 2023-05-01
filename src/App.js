@@ -22,7 +22,7 @@ function App() {
     val: 0,  //calculated value
   });
 
-  //numClickHandler
+  //numClickHandler - function is triggered if the numbers btwn (0-9) are clicked
   const numClickHandler = (e) => {
     e.preventDefault();
     const value = e.target.innerHTML;
@@ -41,6 +41,17 @@ function App() {
       });
     }
   };
+
+  //commaClickHandler - function gets prompted if the decimal point is clicked
+  const commaClickHandler = (e) => {
+  e.preventDefault();
+  const value = e.target.innerHTML;
+
+  setCalc({
+    ...calc,
+    num: !calc.num.toString().includes(".") ? calc.num + value : calc.num,
+  });
+};
 
   return (
    
